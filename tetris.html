@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="side-panel">
+            <div class="score-container">
+                <h2>PUNTOS</h2>
+                <div id="score" class="score">0</div>
+            </div>
+            <div class="level-container">
+                <h2>NIVEL</h2>
+                <div id="level" class="level">1</div>
+            </div>
+            <div class="lines-container">
+                <h2>LÍNEAS</h2>
+                <div id="lines" class="lines">0</div>
+            </div>
+            <div class="next-piece-container">
+                <h2>SIGUIENTE</h2>
+                <canvas id="next-piece" width="120" height="120"></canvas>
+            </div>
+            <div class="controls-info">
+                <h3>CONTROLES</h3>
+                <p>← → Mover</p>
+                <p>↑ Rotar</p>
+                <p>↓ Bajar</p>
+                <p>ESPACIO Caer</p>
+                <p>P Pausa</p>
+            </div>
+        </div>
+        
+        <div class="game-board-container">
+            <canvas id="game-board"></canvas>
+            <div id="game-over" class="game-over hidden">
+                <h2>GAME OVER</h2>
+                <p>Puntuación final: <span id="final-score">0</span></p>
+                <button id="restart-btn" class="restart-btn">JUGAR DE NUEVO</button>
+            </div>
+            <div id="pause-screen" class="pause-screen hidden">
+                <h2>PAUSA</h2>
+                <p>Presiona P para continuar</p>
+            </div>
+            <div id="start-screen" class="start-screen">
+                <h1>TETRIS</h1>
+                <button id="start-btn" class="start-btn">INICIAR</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
