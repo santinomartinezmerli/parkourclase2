@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Parkour Runner</title>
+    <title>Breakout</title>
     <link rel="stylesheet" href="parkour.css">
 </head>
 <body>
     <div class="game-container">
         <div class="hud">
-            <div class="lives-container">
-                <span class="heart">♥</span>
-                <span class="heart">♥</span>
-                <span class="heart">♥</span>
-            </div>
-            <div class="score-container">
+            <div class="score-box">
+                <span>PUNTOS</span>
                 <span id="score">0</span>
+            </div>
+            <div class="lives-box">
+                <span>VIDAS</span>
+                <span id="lives">3</span>
             </div>
         </div>
         
         <canvas id="game-canvas"></canvas>
         
         <div id="start-screen" class="overlay">
-            <h1>🏃 PARKOUR RUNNER</h1>
-            <p>Salta entre plataformas y recoge vidas extras</p>
-            <button id="start-btn">INICIAR</button>
+            <h1>🏓 BREAKOUT</h1>
+            <p>Rompé todos los ladrillos</p>
+            <button id="start-btn">JUGAR</button>
             <div class="controls-hint">
-                <p>← → o TAP para moverte</p>
+                <p>← → o toca para mover</p>
             </div>
         </div>
         

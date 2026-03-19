@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Courier New', monospace;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -27,52 +27,42 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 10px;
-    box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
-    background: linear-gradient(180deg, #2d1b4e 0%, #1a1a2e 100%);
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.3);
 }
 
 .hud {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 15px 20px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     z-index: 10;
+    pointer-events: none;
 }
 
-.lives-container {
+.score-box, .lives-box {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 2px solid #00d9ff;
     display: flex;
-    gap: 5px;
+    flex-direction: column;
+    align-items: center;
 }
 
-.heart {
+.score-box span:first-child, .lives-box span:first-child {
+    color: #00d9ff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.score-box span:last-child, .lives-box span:last-child {
+    color: #fff;
     font-size: 28px;
-    color: #e94560;
-    text-shadow: 0 0 10px #e94560, 0 0 20px #e94560;
-    transition: all 0.3s ease;
-}
-
-.heart.lost {
-    color: #333;
-    text-shadow: none;
-    opacity: 0.3;
-}
-
-.score-container {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: 2px solid #f39c12;
-}
-
-#score {
-    color: #f39c12;
-    font-size: 24px;
     font-weight: bold;
-    text-shadow: 0 0 10px #f39c12;
+    text-shadow: 0 0 10px #fff;
 }
 
 .overlay {
@@ -81,7 +71,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -93,21 +83,20 @@ body {
 }
 
 .overlay h1 {
-    font-size: 36px;
-    color: #e94560;
-    text-shadow: 0 0 20px #e94560, 3px 3px 0 #9b59b6;
+    font-size: 42px;
+    color: #00d9ff;
+    text-shadow: 0 0 20px #00d9ff, 3px 3px 0 #e94560;
     letter-spacing: 3px;
     animation: bounce 1s ease infinite;
 }
 
 .overlay p {
     color: #ecf0f1;
-    font-size: 16px;
-    max-width: 280px;
+    font-size: 18px;
 }
 
 #start-btn, #restart-btn {
-    background: linear-gradient(135deg, #e94560, #9b59b6);
+    background: linear-gradient(135deg, #00d9ff, #0099cc);
     color: #fff;
     border: none;
     padding: 15px 50px;
@@ -117,13 +106,13 @@ body {
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 2px;
-    box-shadow: 0 5px 20px rgba(233, 69, 96, 0.5);
+    box-shadow: 0 5px 20px rgba(0, 217, 255, 0.5);
     transition: all 0.3s ease;
 }
 
 #start-btn:hover, #restart-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(233, 69, 96, 0.7);
+    box-shadow: 0 8px 30px rgba(0, 217, 255, 0.7);
 }
 
 .controls-hint {
@@ -139,6 +128,12 @@ body {
     font-size: 14px;
 }
 
+#final-score {
+    color: #f39c12;
+    font-size: 32px;
+    font-weight: bold;
+}
+
 .hidden {
     display: none !important;
 }
@@ -148,21 +143,6 @@ body {
     50% { transform: translateY(-10px); }
 }
 
-@keyframes heartBeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-.heart.collected {
-    animation: heartBeat 0.5s ease;
-}
-
-#final-score {
-    color: #f39c12;
-    font-size: 32px;
-    font-weight: bold;
-}
-
 @media (max-width: 500px) {
     .game-container {
         max-width: 100%;
@@ -170,6 +150,6 @@ body {
     }
     
     .overlay h1 {
-        font-size: 28px;
+        font-size: 32px;
     }
 }
