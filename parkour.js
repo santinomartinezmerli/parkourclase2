@@ -8,10 +8,9 @@ const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const hearts = document.querySelectorAll('.heart');
 
-const GRAVITY = 0.6;
-const JUMP_FORCE = -14;
-const PLATFORM_SPEED = 3;
-const PLAYER_SPEED = 6;
+const GRAVITY = 0.5;
+const JUMP_FORCE = -12;
+const PLAYER_SPEED = 5;
 
 let gameRunning = false;
 let score = 0;
@@ -22,7 +21,6 @@ const COLORS = {
     background: ['#2d1b4e', '#1a1a2e'],
     player: '#00d9ff',
     platform: '#f39c12',
-    platformGlow: 'rgba(243, 156, 18, 0.3)',
     heart: '#e94560',
     star: '#f1c40f'
 };
@@ -30,19 +28,18 @@ const COLORS = {
 let player = {
     x: 0,
     y: 0,
-    width: 40,
-    height: 50,
+    width: 35,
+    height: 45,
     velocityX: 0,
     velocityY: 0,
     onGround: false,
-    color: COLORS.player
+    jumping: false
 };
 
 let platforms = [];
 let heartsCollectible = [];
 let stars = [];
 let particles = [];
-let clouds = [];
 
 function resizeCanvas() {
     const container = canvas.parentElement;
@@ -62,69 +59,62 @@ function resetGame() {
     scoreEl.textContent = '0';
     
     player.x = canvas.width / 2 - player.width / 2;
-    player.y = canvas.height - 150;
+    player.y = canvas.height - 100;
     player.velocityX = 0;
     player.velocityY = 0;
     player.onGround = false;
+    player.jumping = false;
     
     platforms = [];
     heartsCollectible = [];
     stars = [];
     particles = [];
-    clouds = [];
     
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
         platforms.push({
-            x: Math.random() * (canvas.width - 100),
-            y: canvas.height - 100 - i * 100,
-            width: 80 + Math.random() * 40,
-            height: 15,
-            type: 'normal'
+            x: Math.random() * (canvas.width - 120),
+            y: canvas.height - 80 - i * 90,
+            width: 100 + Math.random() * 40,
+            height: 18
         });
     }
-    
-    for (let i = 0; i < 3; i++) {
-        clouds.push({
-            x: Math.random() * canvas.width,
-            y: 50 + Math.random() * 100,
-            size: 30 + Math.random() * 40,
-            speed: 0.5 + Math.random() * 0.5
-        });
+}
+
+function jump() {
+    if (player.onGround && !player.jumping) {
+        player.velocityY = JUMP_FORCE;
+        player.onGround = false;
+        player.jumping = true;
     }
 }
 
 function spawnPlatform() {
     const lastPlatform = platforms[platforms.length - 1];
-    const gap = 80 + Math.random() * 60;
-    
     platforms.push({
-        x: Math.random() * (canvas.width - 100),
-        y: lastPlatform ? lastPlatform.y - gap : canvas.height - 100,
-        width: 70 + Math.random() * 50,
-        height: 15,
-        type: Math.random() > 0.8 ? 'moving' : 'normal'
+        x: Math.random() * (canvas.width - 120),
+        y: lastPlatform.y - 80 - Math.random() * 30,
+        width: 100 + Math.random() * 40,
+        height: 18
     });
 }
 
 function spawnHeart() {
-    if (Math.random() < 0.02) {
+    if (Math.random() < 0.015) {
         heartsCollectible.push({
             x: Math.random() * (canvas.width - 30),
-            y: Math.random() * (canvas.height / 2),
+            y: Math.random() * canvas.height * 0.7,
             size: 25,
-            velocityY: 1,
             pulse: 0
         });
     }
 }
 
 function spawnStar() {
-    if (Math.random() < 0.015) {
+    if (Math.random() < 0.01) {
         stars.push({
             x: Math.random() * (canvas.width - 20),
-            y: Math.random() * (canvas.height / 2),
+            y: Math.random() * canvas.height * 0.6,
             size: 15,
-            velocityY: 1,
             rotation: 0
         });
     }
@@ -150,31 +140,6 @@ function drawBackground() {
     gradient.addColorStop(1, COLORS.background[1]);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
-    for (let i = 0; i < 50; i++) {
-        const x = (i * 50 + score * 0.1) % canvas.width;
-        const y = (i * 30) % canvas.height;
-        ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-function drawClouds() {
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-    clouds.forEach(cloud => {
-        ctx.beginPath();
-        ctx.arc(cloud.x, cloud.y, cloud.size, 0, Math.PI * 2);
-        ctx.arc(cloud.x + cloud.size * 0.6, cloud.y - 5, cloud.size * 0.7, 0, Math.PI * 2);
-        ctx.arc(cloud.x - cloud.size * 0.5, cloud.y + 5, cloud.size * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-        
-        cloud.x -= cloud.speed;
-        if (cloud.x + cloud.size < 0) {
-            cloud.x = canvas.width + cloud.size;
-        }
-    });
 }
 
 function drawPlayer() {
@@ -190,20 +155,14 @@ function drawPlayer() {
     
     ctx.fillStyle = '#fff';
     ctx.beginPath();
-    ctx.arc(player.x + 12, player.y + 15, 5, 0, Math.PI * 2);
-    ctx.arc(player.x + 28, player.y + 15, 5, 0, Math.PI * 2);
+    ctx.arc(player.x + 10, player.y + 14, 4, 0, Math.PI * 2);
+    ctx.arc(player.x + 25, player.y + 14, 4, 0, Math.PI * 2);
     ctx.fill();
     
     ctx.fillStyle = '#1a1a2e';
     ctx.beginPath();
-    ctx.arc(player.x + 12, player.y + 15, 2, 0, Math.PI * 2);
-    ctx.arc(player.x + 28, player.y + 15, 2, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(player.x + 10, player.y + 13, 1.5, 0, Math.PI * 2);
-    ctx.arc(player.x + 26, player.y + 13, 1.5, 0, Math.PI * 2);
+    ctx.arc(player.x + 10, player.y + 14, 2, 0, Math.PI * 2);
+    ctx.arc(player.x + 25, player.y + 14, 2, 0, Math.PI * 2);
     ctx.fill();
     
     ctx.restore();
@@ -336,11 +295,13 @@ function updatePlayer() {
             player.x + player.width > platform.x &&
             player.x < platform.x + platform.width &&
             player.y + player.height >= platform.y &&
-            player.y + player.height <= platform.y + platform.height + 10) {
+            player.y + player.height <= platform.y + platform.height + 12) {
             
             player.y = platform.y - player.height;
             player.velocityY = 0;
             player.onGround = true;
+            player.jumping = false;
+            jump();
         }
     });
     
@@ -355,19 +316,12 @@ function updatePlayer() {
 
 function updatePlatforms() {
     platforms.forEach(platform => {
-        if (platform.type === 'moving') {
-            platform.x += Math.sin(Date.now() * 0.003) * 2;
-            if (platform.x < 0 || platform.x + platform.width > canvas.width) {
-                platform.x = Math.max(0, Math.min(canvas.width - platform.width, platform.x));
-            }
-        }
-        
-        platform.y += PLATFORM_SPEED;
+        platform.y += 1.5;
     });
     
     platforms = platforms.filter(p => p.y < canvas.height + 50);
     
-    while (platforms.length < 6) {
+    while (platforms.length < 8) {
         spawnPlatform();
     }
     
@@ -377,7 +331,7 @@ function updatePlatforms() {
 
 function updateHearts() {
     heartsCollectible.forEach((heart, index) => {
-        heart.y += heart.velocityY;
+        heart.y += 1.5;
         heart.pulse += 0.1;
         
         if (player.x + player.width > heart.x &&
@@ -403,7 +357,7 @@ function updateHearts() {
 
 function updateStars() {
     stars.forEach((star, index) => {
-        star.y += star.velocityY;
+        star.y += 1.5;
         star.rotation += 0.05;
         
         if (player.x + player.width > star.x &&
@@ -433,7 +387,7 @@ function loseLife() {
     if (lives <= 0) {
         gameOver();
     } else {
-        player.y = canvas.height - 200;
+        player.y = canvas.height - 150;
         player.velocityY = 0;
     }
 }
@@ -459,7 +413,6 @@ function gameLoop() {
     if (!gameRunning) return;
     
     drawBackground();
-    drawClouds();
     drawPlatforms();
     drawHearts();
     drawStars();
@@ -497,15 +450,6 @@ function setupControls() {
             case 'D':
                 player.velocityX = PLAYER_SPEED;
                 break;
-            case 'ArrowUp':
-            case 'w':
-            case 'W':
-            case ' ':
-                if (player.onGround) {
-                    player.velocityY = JUMP_FORCE;
-                    player.onGround = false;
-                }
-                break;
         }
     });
     
@@ -518,12 +462,8 @@ function setupControls() {
         }
     });
     
-    let touching = false;
-    
     canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        touching = true;
-        
         if (!gameRunning) return;
         
         const touch = e.touches[0];
@@ -535,16 +475,10 @@ function setupControls() {
         } else {
             player.velocityX = PLAYER_SPEED;
         }
-        
-        if (player.onGround) {
-            player.velocityY = JUMP_FORCE;
-            player.onGround = false;
-        }
     });
     
     canvas.addEventListener('touchend', (e) => {
         e.preventDefault();
-        touching = false;
         player.velocityX = 0;
     });
     
@@ -558,11 +492,6 @@ function setupControls() {
             player.velocityX = -PLAYER_SPEED;
         } else {
             player.velocityX = PLAYER_SPEED;
-        }
-        
-        if (player.onGround) {
-            player.velocityY = JUMP_FORCE;
-            player.onGround = false;
         }
     });
     
