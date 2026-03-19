@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #00d9ff;
+            font-size: 48px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px #00d9ff;
+        }
+        .games {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .game-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            width: 200px;
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #00d9ff;
+            box-shadow: 0 10px 30px rgba(0,217,255,0.3);
+        }
+        .game-card h2 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .game-card p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+        .game-card .emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 JUEGOS</h1>
+    <div class="games">
+        <div class="game-card" onclick="location.href='tetris.html'">
+            <div class="emoji">🧱</div>
+            <h2>TETRIS</h2>
+            <p>Encaja las piezas</p>
+        </div>
+        <div class="game-card" onclick="location.href='parkour.html'">
+            <div class="emoji">🏃</div>
+            <h2>PARKOUR</h2>
+            <p>Salta y corre</p>
+        </div>
+    </div>
+</body>
+</html>
